@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimalistische Witte Klok</title>
+    <title>Contrast Klok</title>
     <style>
         :root {
             /* Diep donkere achtergrond voor maximaal contrast */
-            --bg-color: #03060a; 
-            /* Fel, schoon wit voor de tekst */
-            --text-color: #ffffff; 
+            --bg-color: #000000; /* Zwart */
+            /* Fel, neon-blauw voor de tekst */
+            --text-color: #00ffff; /* Cyaan/Neon-blauw */
         }
 
         body {
@@ -45,6 +45,8 @@
             letter-spacing: -2px;
             /* Zorgt dat de cijfers scherp blijven */
             -webkit-font-smoothing: antialiased;
+            /* Subtiele gloed voor het neon-effect */
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
         .date-display {
@@ -52,4 +54,48 @@
             font-size: 2vw;
             text-transform: uppercase;
             letter-spacing: 0.6rem;
-            opacity: 0.7; /* Iets minder fel dan de klok voor hi
+            opacity: 0.9; /* Iets minder fel dan de klok voor hiërarchie */
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        /* Aanpassingen voor mobiele schermen */
+        @media (max-width: 768px) {
+            #local-time { 
+                font-size: 20vw; 
+                letter-spacing: -1px;
+            }
+            .date-display { 
+                font-size: 4vw; 
+                letter-spacing: 0.3rem;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock-container">
+        <div class="date-display" id="date">LADEN...</div>
+        <h1 id="local-time">00:00:00</h1>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+
+            // Tijd formatteren (HH:MM:SS) in Nederlandse stijl
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            document.getElementById('local-time').textContent = now.toLocaleTimeString('nl-NL', timeOptions);
+            
+            // Datum formatteren (dag, dd maand jjjj)
+            const dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('nl-NL', dateOptions);
+        }
+
+        // Start direct en update elke seconde
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
