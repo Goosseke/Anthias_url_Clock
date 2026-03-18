@@ -3,78 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus Klok</title>
+    <title>Minimalistische Witte Klok</title>
     <style>
         :root {
-            --bg-color: #050a14;
-            --text-color: #ffffff;
-            --accent-color: #00ffcc;
+            /* Diep donkere achtergrond voor maximaal contrast */
+            --bg-color: #03060a; 
+            /* Fel, schoon wit voor de tekst */
+            --text-color: #ffffff; 
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Courier New', Courier, monospace;
+            /* Een strakker, modern lettertype (Monospace) */
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            /* Subtiele animatie bij het laden */
+            animation: fadeIn 1s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .clock-container {
             text-align: center;
         }
 
-        /* De klok is nu ongeveer 15% van de schermbreedte per cijfer */
         #local-time {
+            /* Groot en indrukwekkend */
             font-size: 15vw; 
-            font-weight: 900;
-            color: var(--accent-color);
-            text-shadow: 0 0 40px rgba(0, 255, 204, 0.2);
+            font-weight: 800;
             margin: 0;
             line-height: 1;
+            letter-spacing: -2px;
+            /* Zorgt dat de cijfers scherp blijven */
+            -webkit-font-smoothing: antialiased;
         }
 
         .date-display {
-            font-size: 2.5vw;
+            /* Subtieler dan de klok, maar goed leesbaar */
+            font-size: 2vw;
             text-transform: uppercase;
-            letter-spacing: 0.5rem;
-            opacity: 0.5;
-            margin-bottom: 1rem;
-        }
-
-        /* Voor hele kleine schermen (mobiel) maken we de tekst iets leesbaarder */
-        @media (max-width: 600px) {
-            #local-time { font-size: 20vw; }
-            .date-display { font-size: 5vw; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="clock-container">
-        <div class="date-display" id="date">LADEN...</div>
-        <h1 id="local-time">00:00:00</h1>
-    </div>
-
-    <script>
-        function updateClock() {
-            const now = new Date();
-
-            // Tijd formatteren (HH:MM:SS)
-            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-            document.getElementById('local-time').textContent = now.toLocaleTimeString('nl-NL', timeOptions);
-            
-            // Datum formatteren
-            const dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-            document.getElementById('date').textContent = now.toLocaleDateString('nl-NL', dateOptions);
-        }
-
-        // Elke seconde updaten
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
-</body>
-</html>
+            letter-spacing: 0.6rem;
+            opacity: 0.7; /* Iets minder fel dan de klok voor hi
