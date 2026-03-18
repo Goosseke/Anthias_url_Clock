@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Timekeeper</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .main-clock {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        #local-time {
+            font-size: 6rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+            margin: 0;
+        }
+
+        .date-display {
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .world-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .city-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .city-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .city-time {
+            font-size: 1.8rem;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-clock">
+        <div class="date-display" id="date">Loading Date...</div>
+        <h1 id="local-time">00:00:00</h1>
+        <p>Your Local Time</p>
+    </div>
+
+    <div class="world-grid" id="world-grid">
+        </div>
+
+    <script>
+        const cities = [
+            { name: 'New York', zone: 'America/New_York' },
+            { name: 'London', zone: 'Europe/London' },
+            { name: 'Tokyo', zone: 'Asia/Tokyo' },
+            { name: 'Dubai', zone: 'Asia/Dubai' }
+        ];
+
+        function updateClocks() {
+            const now = new Date();
+
+            // Update Local Main Clock
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            document.getElementById('local-time').textContent = now.toLocaleTimeString([], options);
+            
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString(undefined, dateOptions);
+
+            // Update World Grid
+            const grid = document.getElementById('world-grid');
+            grid.innerHTML = ''; // Clear and redraw
+
+            cities.forEach(city => {
+                const cityTime = new Intl.DateTimeFormat('en-GB', {
+                    timeZone: city.zone,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                }).format(now);
+
+                const card = document.createElement('div');
+                card.className = 'city-card';
+                card.innerHTML = `
+                    <span class="city-name">${city.name}</span>
+                    <span class="city-time">${cityTime}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        setInterval(updateClocks, 1000);
+        updateClocks();
+    </script>
+</body>
+</html>
+
+
+
+
