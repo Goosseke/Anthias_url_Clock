@@ -1,133 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Timekeeper</title>
+    <title>Strakke Witte Klok</title>
     <style>
-        :root {
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --accent-color: #38bdf8;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* Diepzwart en schoon wit voor maximaal contrast */
+        html, body {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            margin: 0;
+            font-family: 'Courier New', Courier, monospace; /* Monospace houdt de cijfers stil */
+            overflow: hidden;
         }
 
-        .main-clock {
+        .clock-container {
             text-align: center;
-            margin-bottom: 3rem;
         }
 
-        #local-time {
-            font-size: 6rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
-            margin: 0;
-        }
-
-        .date-display {
-            font-size: 1.5rem;
-            opacity: 0.8;
-        }
-
-        .world-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            width: 90%;
-            max-width: 1000px;
-        }
-
-        .city-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .city-name {
-            font-size: 1.1rem;
-            font-weight: 600;
+        /* De Datum boven de klok */
+        #date {
+            font-size: 3vw;
+            text-transform: uppercase;
+            letter-spacing: 0.8rem;
             margin-bottom: 10px;
-            display: block;
+            opacity: 0.6; /* Iets subtieler dan de tijd */
         }
 
-        .city-time {
-            font-size: 1.8rem;
-            font-family: monospace;
+        /* DE GIGANTISCHE KLOK */
+        #clock {
+            font-size: 20vw; /* Lekker groot, vult het scherm goed */
+            font-weight: 900;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); /* Zachte witte gloed */
+            white-space: nowrap;
+        }
+
+        /* Mobiele optimalisatie voor telefoons */
+        @media (max-width: 768px) {
+            #clock { font-size: 25vw; }
+            #date { font-size: 5vw; letter-spacing: 0.3rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="main-clock">
-        <div class="date-display" id="date">Loading Date...</div>
-        <h1 id="local-time">00:00:00</h1>
-        <p>Your Local Time</p>
+    <div class="clock-container">
+        <div id="date">LADEN...</div>
+        <div id="clock">00:00:00</div>
     </div>
 
-    <div class="world-grid" id="world-grid">
-        </div>
-
     <script>
-        const cities = [
-            { name: 'New York', zone: 'America/New_York' },
-            { name: 'London', zone: 'Europe/London' },
-            { name: 'Tokyo', zone: 'Asia/Tokyo' },
-            { name: 'Dubai', zone: 'Asia/Dubai' }
-        ];
-
-        function updateClocks() {
+        function update() {
             const now = new Date();
-
-            // Update Local Main Clock
-            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-            document.getElementById('local-time').textContent = now.toLocaleTimeString([], options);
             
-            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('date').textContent = now.toLocaleDateString(undefined, dateOptions);
-
-            // Update World Grid
-            const grid = document.getElementById('world-grid');
-            grid.innerHTML = ''; // Clear and redraw
-
-            cities.forEach(city => {
-                const cityTime = new Intl.DateTimeFormat('en-GB', {
-                    timeZone: city.zone,
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false
-                }).format(now);
-
-                const card = document.createElement('div');
-                card.className = 'city-card';
-                card.innerHTML = `
-                    <span class="city-name">${city.name}</span>
-                    <span class="city-time">${cityTime}</span>
-                `;
-                grid.appendChild(card);
-            });
+            // Tijd (HH:MM:SS) - Pakt de tijd van jouw computer/telefoon
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            document.getElementById('clock').textContent = now.toLocaleTimeString('nl-NL', timeOptions);
+            
+            // Volledige Datum
+            const dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('nl-NL', dateOptions);
         }
 
-        setInterval(updateClocks, 1000);
-        updateClocks();
+        // Direct starten en elke seconde herhalen
+        update();
+        setInterval(update, 1000);
     </script>
 </body>
 </html>
-
-
-
-
