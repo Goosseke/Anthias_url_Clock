@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anthias Paasklok</title>
+    <title>Strakke Witte Klok - Geoptimaliseerd</title>
     <style>
+        /* Basis instellingen voor volledig scherm */
         html, body {
             background-color: #000000 !important;
             color: #ffffff !important;
@@ -22,37 +23,34 @@
         .clock-container {
             text-align: center;
             width: 100%;
+            /* Padding zorgt ervoor dat de cijfers nooit de rand raken */
             padding: 0 5vw; 
             box-sizing: border-box;
-            position: relative;
-            z-index: 10; 
         }
 
+        /* De Datum */
         #date {
-            font-size: 2.5vw;
+            font-size: 2.5vw; /* Iets kleiner gemaakt voor betere balans */
             text-transform: uppercase;
             letter-spacing: 0.5rem;
             margin-bottom: 20px;
             opacity: 0.5;
         }
 
+        /* DE KLOK: aangepast naar 15vw voor perfecte pasvorm */
         #clock {
             font-size: 15vw; 
             font-weight: 900;
             line-height: 1;
+            /* Subtiele gloed voor diepte */
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.1); 
             white-space: nowrap;
         }
 
-        /* GIGANTISCHE PASEN OBJECTEN (nu als IMG) */
-        .easter-item {
-            position: absolute;
-            width: 250px; /* Grootte van het plaatje */
-            height: auto;
-            user-select: none;
-            pointer-events: none;
-            z-index: 5;
-            will-change: transform;
+        /* Mobiele versie: tekst wordt relatief groter op smalle schermen */
+        @media (max-width: 768px) {
+            #clock { font-size: 20vw; }
+            #date { font-size: 4vw; letter-spacing: 0.2rem; }
         }
     </style>
 </head>
@@ -64,75 +62,31 @@
     </div>
 
     <script>
-        // --- KLOK LOGICA ---
         function update() {
             const now = new Date();
+            
+            // Tijd formatteren (Nederlandse stijl)
             const timeString = now.toLocaleTimeString('nl-NL', { 
-                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: false 
             });
             document.getElementById('clock').textContent = timeString;
             
+            // Datum formatteren
             const dateString = now.toLocaleDateString('nl-NL', { 
-                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
             });
             document.getElementById('date').textContent = dateString;
         }
-        setInterval(update, 1000);
+
+        // Direct starten en elke seconde herhalen
         update();
-
-        // --- PAAS LOGICA MET AFBEELDINGEN ---
-        function createEasterItem() {
-            const item = document.createElement('img');
-            item.className = 'easter-item';
-            
-            // We gebruiken transparante PNG's van openbron bronnen
-            const images = [
-                'https://noto-website-2.storage.googleapis.com/emoji/emoji_u1f430.png', // Paashaas
-                'https://noto-website-2.storage.googleapis.com/emoji/emoji_u1f95a.png'  // Ei
-            ];
-            
-            item.src = images[Math.floor(Math.random() * images.length)];
-            
-            // Kleurfilters voor de eieren (werkt op Anthias)
-            if (item.src.includes('u1f95a')) {
-                const hues = [0, 90, 180, 270]; 
-                const randomHue = hues[Math.floor(Math.random() * hues.length)];
-                item.style.filter = `hue-rotate(${randomHue}deg) saturate(2)`;
-            }
-
-            const startX = Math.random() * window.innerWidth;
-            let posY = window.innerHeight + 300; 
-            let posX = startX;
-            
-            let speedY = -(Math.random() * 15 + 20); 
-            const speedX = (Math.random() - 0.5) * 6;
-            const gravity = 0.4; 
-            
-            let rotation = 0;
-            const rotationSpeed = (Math.random() - 0.5) * 10;
-
-            item.style.left = posX + 'px';
-            item.style.top = posY + 'px';
-            document.body.appendChild(item);
-
-            const moveItem = setInterval(() => {
-                speedY += gravity;
-                posY += speedY;
-                posX += speedX;
-                rotation += rotationSpeed;
-                
-                item.style.top = posY + 'px';
-                item.style.left = posX + 'px';
-                item.style.transform = `rotate(${rotation}deg)`;
-                
-                if (posY > window.innerHeight + 600 && speedY > 0) {
-                    clearInterval(moveItem);
-                    item.remove();
-                }
-            }, 20);
-        }
-
-        setInterval(createEasterItem, 800);
+        setInterval(update, 1000);
     </script>
 </body>
 </html>
